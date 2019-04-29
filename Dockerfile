@@ -96,6 +96,26 @@ RUN installGithub.r \
   royfrancis/pophelper \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
+# Install dartR package
+  # install linux dependencies
+RUN sudo apt-get update -qq
+RUN sudo apt -y install libglu1-mesa-dev
+RUN sudo apt-get -y --no-install-recommends \
+	install gdal-bin proj-bin libgdal-dev libproj-dev
+  # Install BiocManager
+RUN install2.r --error \
+  BiocManager \
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+  # Install R packages from Bioconductor
+RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue'))"
+  # Install dartR
+#RUN install2.r --error \
+#  dartR \
+#  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+RUN installGithub.r \
+  green-striped-gecko/dartR \
+ && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
 # Install R packages from CRAN
 RUN apt-get update -qq \
   && apt-get -y install libudunits2-dev # needed for scatterpie
@@ -112,14 +132,16 @@ RUN install2.r --error \
   ggmap \
   ggsn # adds scale bar and north arrow to ggmap maps \
   diveRsity \
+  strataG \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
 RUN installGithub.r \
   jgx65/hierfstat \
   fawda123/ggord \
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds  
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
+
 # Import Data or Create a blank Data directory
 # COPY /Data /home/rstudio/Data
 RUN mkdir /home/rstudio/data
