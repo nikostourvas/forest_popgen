@@ -115,14 +115,13 @@ RUN install2.r --error \
   ggThemeAssist \
   remedy \
   popprxl \
-  genepop # it is also installed as a linux executable below \
+  genepop \
   factoextra \
   kableExtra \
-  scatterpie # pie charts on map \
+  scatterpie \
   ggmap \
-  ggsn # adds scale bar and north arrow to ggmap maps \
+  ggsn \
   diveRsity \
-  strataG \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
@@ -134,7 +133,6 @@ RUN installGithub.r \
 # Install radiator
 RUN install2.r --error \
   pak \
-  pcadapt \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 #RUN R -e "pak::pkg_install("thierrygosselin/radiator", ask = FALSE)"
