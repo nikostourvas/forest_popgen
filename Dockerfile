@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM hlapp/rpopgen
+FROM hlapp/rpopgen:latest
 
 # Tinytex
 RUN wget -qO- \
@@ -27,16 +27,6 @@ COPY tahomabd.ttf /usr/share/fonts/truetype/tahomabd.ttf
 
 # Create directory for population genetics software on linux
 RUN mkdir /home/rstudio/software
-
-# Install genepop on linux
-RUN mkdir /home/rstudio/software/genepop \
-  && cd /home/rstudio/software/genepop \
-  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
-  && unzip GenepopV4.zip \
-  && unzip sources.zip \ 
-  && rm -rf GenepopV4.zig sources.zip \
-  && g++ -o Genepop *.cpp -O3 \
-  && cp Genepop /usr/local/bin/Genepop
 
 # Install clumpp
 RUN mkdir /home/rstudio/software/clumpp \ 
@@ -141,6 +131,29 @@ RUN installGithub.r \
   fawda123/ggord \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
+# Install radiator
+RUN install2.r --error \
+  pak \
+  pcadapt \
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+#RUN R -e "pak::pkg_install("thierrygosselin/radiator", ask = FALSE)"
+RUN installGithub.r \
+	thierrygosselin/radiator \
+&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+	
+
+ Install genepop on linux
+RUN mkdir /home/rstudio/software/genepop \
+  && cd /home/rstudio/software/genepop \
+  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
+  && unzip GenepopV4.zip \
+  && unzip sources.zip \ 
+  && rm -rf GenepopV4.zig sources.zip \
+  && g++ -o Genepop *.cpp -O3 \
+  && cp Genepop /usr/local/bin/Genepop
+
+
 
 # Import Data or Create a blank Data directory
 # COPY /Data /home/rstudio/Data
