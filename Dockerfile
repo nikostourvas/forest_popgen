@@ -143,7 +143,7 @@ RUN installGithub.r \
 && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 	
 
- Install genepop on linux
+# Install genepop on linux
 RUN mkdir /home/rstudio/software/genepop \
   && cd /home/rstudio/software/genepop \
   && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
