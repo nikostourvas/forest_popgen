@@ -120,8 +120,9 @@ RUN installGithub.r \
   fawda123/ggord \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds  
   
-# Import Data  
-COPY /Data /home/rstudio/Data
+# Import Data or Create a blank Data directory
+# COPY /Data /home/rstudio/Data
+RUN mkdir /home/rstudio/data
 # Make data read-only
 
 # Import preferences for RStudio interface
