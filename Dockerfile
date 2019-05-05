@@ -147,14 +147,19 @@ RUN mkdir /home/rstudio/software/genepop \
   && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
   && unzip GenepopV4.zip \
   && unzip sources.zip \ 
-  && rm -rf GenepopV4.zig sources.zip \
+  && rm -rf GenepopV4.zip sources.zip \
   && g++ -o Genepop *.cpp -O3 \
   && cp Genepop /usr/local/bin/Genepop
 
-
+# Install console version of Arlequin
+RUN mkdir /home/rstudio/software/arlecore \
+  && cd /home/rstudio/software/arlecore \
+  && wget http://cmpg.unibe.ch/software/arlequin35/linux/arlecore_linux.zip\
+  && unzip arlecore_linux.zip \
+  && rm -rf arlecore_linux.zip	 
 
 # Import Data or Create a blank Data directory
-# COPY /Data /home/rstudio/Data
+# COPY /data /home/rstudio/data
 RUN mkdir /home/rstudio/data
 # Make data read-only
 
