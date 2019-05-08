@@ -1,5 +1,6 @@
 ####### Dockerfile #######
 FROM hlapp/rpopgen:latest
+MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Tinytex
 RUN wget -qO- \
@@ -157,6 +158,11 @@ RUN mkdir /home/rstudio/software/arlecore \
   && wget http://cmpg.unibe.ch/software/arlequin35/linux/arlecore_linux.zip\
   && unzip arlecore_linux.zip \
   && rm -rf arlecore_linux.zip	 
+
+# Install ecodist package
+RUN install2.r --error \
+  ecodist \
+  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Import Data or Create a blank Data directory
 # COPY /data /home/rstudio/data
