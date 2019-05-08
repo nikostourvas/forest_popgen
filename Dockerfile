@@ -132,10 +132,6 @@ RUN installGithub.r \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
 # Install radiator
-RUN install2.r --error \
-  pak \
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-
 #RUN R -e "pak::pkg_install("thierrygosselin/radiator", ask = FALSE)"
 RUN installGithub.r \
 	thierrygosselin/radiator \
