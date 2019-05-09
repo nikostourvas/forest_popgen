@@ -69,7 +69,24 @@ RUN mkdir /home/rstudio/software/bayescan \
   && rm -rf BayeScan2.1.zip \
   && cd /home/rstudio/software/bayescan/BayeScan2.1/source \
   && make
-  
+
+# Install genepop on linux
+RUN mkdir /home/rstudio/software/genepop \
+  && cd /home/rstudio/software/genepop \
+  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
+  && unzip GenepopV4.zip \
+  && unzip sources.zip \ 
+  && rm -rf GenepopV4.zip sources.zip \
+  && g++ -o Genepop *.cpp -O3 \
+  && cp Genepop /usr/local/bin/Genepop
+
+# Install console version of Arlequin
+RUN mkdir /home/rstudio/software/arlecore \
+  && cd /home/rstudio/software/arlecore \
+  && wget http://cmpg.unibe.ch/software/arlequin35/linux/arlecore_linux.zip\
+  && unzip arlecore_linux.zip \
+  && rm -rf arlecore_linux.zip	 
+
 # Install Pophelper for Structure output
   # install linux dependencies
 RUN sudo apt -y install libcairo2-dev \
@@ -123,46 +140,24 @@ RUN install2.r --error \
   ggmap \
   ggsn \
   diveRsity \
+  ecodist \
+  hierfstat \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
 RUN installGithub.r \
-  jgx65/hierfstat \
+  #jgx65/hierfstat \
   fawda123/ggord \
+  thierrygosselin/radiator \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
 # Install radiator
 #RUN R -e "pak::pkg_install("thierrygosselin/radiator", ask = FALSE)"
-RUN installGithub.r \
-	thierrygosselin/radiator \
-&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 	
-
-# Install genepop on linux
-RUN mkdir /home/rstudio/software/genepop \
-  && cd /home/rstudio/software/genepop \
-  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
-  && unzip GenepopV4.zip \
-  && unzip sources.zip \ 
-  && rm -rf GenepopV4.zip sources.zip \
-  && g++ -o Genepop *.cpp -O3 \
-  && cp Genepop /usr/local/bin/Genepop
-
-# Install console version of Arlequin
-RUN mkdir /home/rstudio/software/arlecore \
-  && cd /home/rstudio/software/arlecore \
-  && wget http://cmpg.unibe.ch/software/arlequin35/linux/arlecore_linux.zip\
-  && unzip arlecore_linux.zip \
-  && rm -rf arlecore_linux.zip	 
-
-# Install ecodist package
-RUN install2.r --error \
-  ecodist \
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-
 # Import Data or Create a blank Data directory
 # COPY /data /home/rstudio/data
 RUN mkdir /home/rstudio/data
+
 # Make data read-only
 
 # Import preferences for RStudio interface
