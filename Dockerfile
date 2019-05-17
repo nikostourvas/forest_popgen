@@ -141,7 +141,6 @@ RUN install2.r --error \
   ggsn \
   diveRsity \
   ecodist \
-  hierfstat \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
@@ -161,4 +160,5 @@ RUN mkdir /home/rstudio/data
 # Make data read-only
 
 # Import preferences for RStudio interface
-COPY set_theme.sh /etc/cont-init.d/theme
+#COPY set_theme.sh /etc/cont-init.d/theme
+COPY git_config.sh /etc/cont-init.d/gitconfig
