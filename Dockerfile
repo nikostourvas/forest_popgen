@@ -143,6 +143,7 @@ RUN install2.r --error \
   ecodist \
   splitstackshape \
   fsthet \
+  XML \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
