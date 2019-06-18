@@ -22,10 +22,6 @@ RUN tlmgr install \
   setspace \
   hanging
   
-# Install Tahoma font
-COPY tahoma.ttf /usr/share/fonts/truetype/tahoma.ttf
-COPY tahomabd.ttf /usr/share/fonts/truetype/tahomabd.ttf
-
 # Create directory for population genetics software on linux
 RUN mkdir /home/rstudio/software
 
@@ -161,7 +157,3 @@ RUN installGithub.r \
 RUN mkdir /home/rstudio/data
 
 # Make data read-only
-
-# Import preferences for RStudio interface
-#COPY set_theme.sh /etc/cont-init.d/theme
-COPY git_config.sh /etc/cont-init.d/gitconfig
