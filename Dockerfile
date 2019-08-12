@@ -140,6 +140,7 @@ RUN install2.r --error \
   splitstackshape \
   fsthet \
   XML \
+  pinfsc50 \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
