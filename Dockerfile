@@ -145,7 +145,7 @@ RUN install2.r --error \
 
 # Install R packages from github
 RUN installGithub.r \
-  #nikostourvas/hierfstat \
+  nikostourvas/hierfstat \
   fawda123/ggord \
   thierrygosselin/radiator \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
