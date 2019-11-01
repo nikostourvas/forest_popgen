@@ -141,9 +141,8 @@ RUN install2.r --error \
   fsthet \
   XML \
   pinfsc50 \
-  lme4 \
-  lmeTest \
   car \
+  sjstats \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
