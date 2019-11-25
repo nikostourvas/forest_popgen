@@ -143,6 +143,7 @@ RUN install2.r --error \
   pinfsc50 \
   car \
   sjstats \
+  agricolae \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
