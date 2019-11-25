@@ -154,7 +154,17 @@ RUN installGithub.r \
   
 # Install radiator
 #RUN R -e "pak::pkg_install("thierrygosselin/radiator", ask = FALSE)"
+
+# Install vim
+RUN apt -y install vim
 	
+# Install python3-pip
+RUN apt -y install python3-venv python3-pip
+# Install structure-threader
+RUN pip3 install structure_threader --user 
+# optional: add structure-threader to PATH
+RUN echo "PATH=$PATH:/.local/bin" >> .profile
+
 # Import Data or Create a blank Data directory
 # COPY /data /home/rstudio/data
 RUN mkdir /home/rstudio/data
