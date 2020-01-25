@@ -34,6 +34,14 @@ RUN mkdir /home/rstudio/software/clumpp \
   && cd CLUMPP_Linux64.1.1.2 \
   && cp CLUMPP /usr/local/bin/CLUMPP
 
+# Install clumpak
+#RUN mkdir /home/rstudio/software/clumpak \
+	#&& cd /home/rstudio/software/clumpak \
+	#&& wget http://clumpak.tau.ac.il/download/CLUMPAK.zip \
+	#&& unzip CLUMPAK.zip \
+	#&& unzip 26_03_2015_CLUMPAK.zip \
+	#&& rm -rf CLUMPAK.zip 26_03_2015_CLUMPAK.zip Mac_OSX_files.zip
+
 # Install Structure
 RUN mkdir /home/rstudio/software/struct-src \
   && cd /home/rstudio/software/struct-src \
@@ -148,9 +156,11 @@ RUN install2.r --error \
 
 # Install R packages from github
 RUN installGithub.r \
-  nikostourvas/hierfstat \
+  jgx65/hierfstat \
   fawda123/ggord \
   thierrygosselin/radiator \
+  zkamvar/ggcompoplot \
+  nikostourvas/PopGenUtils \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
 # Install radiator
