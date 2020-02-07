@@ -152,6 +152,7 @@ RUN install2.r --error \
   car \
   sjstats \
   agricolae \
+  ggpubr \ 
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
