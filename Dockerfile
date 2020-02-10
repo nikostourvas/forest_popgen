@@ -181,4 +181,4 @@ RUN echo "PATH=$PATH:/.local/bin" >> .profile
 # COPY /data /home/rstudio/data
 RUN mkdir /home/rstudio/data
 
-# Make data read-only
+# TODO: Make data read-only
