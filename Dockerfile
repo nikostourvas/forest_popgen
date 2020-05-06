@@ -170,12 +170,11 @@ RUN installGithub.r \
 # Install vim
 RUN apt -y install vim
 	
-# Install python3-pip
-RUN apt -y install python3-venv python3-pip
-# Install structure-threader
-RUN pip3 install structure_threader --user 
+# Install python3-pip & structure_threader
+RUN apt -y install python3-venv python3-pip \
+&& pip3 install structure_threader 
 # optional: add structure-threader to PATH
-RUN echo "PATH=$PATH:/.local/bin" >> .profile
+#RUN echo "PATH=$PATH:/.local/bin" >> .profile
 
 # Import Data or Create a blank Data directory
 # COPY /data /home/rstudio/data
