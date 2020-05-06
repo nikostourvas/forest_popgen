@@ -54,7 +54,7 @@ RUN mkdir /home/rstudio/software/struct-src \
 
 # Install Migraine
 RUN apt-get update -qq \
-  && apt -y install libgmp3-dev 
+  && apt -y install libgmp3-dev libglpk-dev
 RUN install2.r --error \
  blackbox \
  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
