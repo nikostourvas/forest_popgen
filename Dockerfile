@@ -26,21 +26,65 @@ RUN tlmgr install \
 RUN mkdir /home/rstudio/software
 
 # Install clumpp
-RUN mkdir /home/rstudio/software/clumpp \ 
-  && cd /home/rstudio/software/clumpp \
-  && wget https://rosenberglab.stanford.edu/software/CLUMPP_Linux64.1.1.2.tar.gz \
-  && gunzip CLUMPP_Linux64.1.1.2.tar.gz; tar xvf CLUMPP_Linux64.1.1.2.tar \
-  && rm -rf CLUMPP_Linux64.1.1.2.tar.gz CLUMPP_Linux64.1.1.2.tar \
-  && cd CLUMPP_Linux64.1.1.2 \
-  && cp CLUMPP /usr/local/bin/CLUMPP
+#RUN mkdir /home/rstudio/software/clumpp \ 
+#  && cd /home/rstudio/software/clumpp \
+#  && wget https://rosenberglab.stanford.edu/software/CLUMPP_Linux64.1.1.2.tar.gz \
+#  && gunzip CLUMPP_Linux64.1.1.2.tar.gz; tar xvf CLUMPP_Linux64.1.1.2.tar \
+#  && rm -rf CLUMPP_Linux64.1.1.2.tar.gz CLUMPP_Linux64.1.1.2.tar \
+#  && cd CLUMPP_Linux64.1.1.2 \
+#  && cp CLUMPP /usr/local/bin/CLUMPP
 
 # Install clumpak
-#RUN mkdir /home/rstudio/software/clumpak \
-	#&& cd /home/rstudio/software/clumpak \
-	#&& wget http://clumpak.tau.ac.il/download/CLUMPAK.zip \
-	#&& unzip CLUMPAK.zip \
-	#&& unzip 26_03_2015_CLUMPAK.zip \
-	#&& rm -rf CLUMPAK.zip 26_03_2015_CLUMPAK.zip Mac_OSX_files.zip
+RUN mkdir /home/rstudio/software/clumpak \
+        && cd /home/rstudio/software/clumpak \
+        && wget http://clumpak.tau.ac.il/download/CLUMPAK.zip \
+        && cd /home/rstudio/software/clumpak \
+        && unzip CLUMPAK.zip \
+        && cd CLUMPAK \
+        && unzip 26_03_2015_CLUMPAK.zip \
+        && rm -rf CLUMPAK.zip 26_03_2015_CLUMPAK.zip Mac_OSX_files.zip
+
+# Install clumpak perl dependencies via apt
+RUN apt -y install libgd-graph3d-perl \
+        libgd-graph-perl \
+        libgd-perl \
+        libarchive-zip-perl \
+        libarchive-extract-perl
+
+# Clumpak dependecies via cpanm
+RUN apt -y install cpanminus
+RUN cpanm Clone \
+        Config::General \
+        Data::PowerSet \
+        Getopt::Long \
+        File::Slurp \
+        File::Path \
+        List::MoreUtils \
+        PDF::API2 \
+        PDF::Table \
+        File::Basename \
+        List::Permutor \
+        GD::Graph::lines \
+        GD::Graph::Data \
+        Getopt::Std \
+        List::Util \
+        File::Slurp \
+        Scalar::Util \
+        Statistics::Distributions \
+        Archive::Extract \
+        Array::Utils
+
+# Copy .pm files to /usr/share/perl/5.28/
+RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK \
+        && sudo chmod +x *pm \
+        && cp *.pm /usr/share/perl/5.28/
+# fix permissions for executables
+RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/CLUMPP \
+        && sudo chmod +x CLUMPP \
+        && cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/mcl/bin \
+        && sudo chmod +x * \
+        && cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/distruct \
+        && sudo chmod +x distruct1.1
 
 # Install Structure
 RUN mkdir /home/rstudio/software/struct-src \
