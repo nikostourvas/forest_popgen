@@ -192,7 +192,6 @@ RUN install2.r --error \
   splitstackshape \
   fsthet \
   XML \
-  pinfsc50 \
   car \
   sjstats \
   agricolae \
