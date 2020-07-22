@@ -74,10 +74,10 @@ RUN cpanm Clone \
         Archive::Extract \
         Array::Utils
 
-# Copy .pm files to /usr/share/perl/5.28/
+# Copy .pm files to /usr/share/perl/5.30/
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK \
         && sudo chmod +x *pm \
-        && cp *.pm /usr/share/perl/5.28/
+        && cp *.pm /usr/share/perl/5.30/
 # fix permissions for executables
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/CLUMPP \
         && sudo chmod +x CLUMPP \
