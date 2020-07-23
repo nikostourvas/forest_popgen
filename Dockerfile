@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM hlapp/rpopgen:latest
+FROM hlapp/rpopgen:0.2.13
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Tinytex
@@ -97,17 +97,17 @@ RUN mkdir /home/rstudio/software/struct-src \
   && cp structure /usr/local/bin/structure 
 
 # Install Migraine
-RUN apt-get update -qq \
-  && apt -y install libgmp3-dev libglpk-dev
-RUN install2.r --error \
- blackbox \
- && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-RUN mkdir /home/rstudio/software/migraine \
-  && cd /home/rstudio/software/migraine \
-  && wget http://kimura.univ-montp2.fr/%7Erousset/migraine05/migraine.tar.gz \
-  && gunzip migraine.tar.gz; tar xvf migraine.tar \
-  && rm -rf migraine.tar.gz  migraine.tar \
-  && g++ -DNO_MODULES -o migraine latin.cpp -O3 
+#RUN apt-get update -qq \
+#  && apt -y install libgmp3-dev libglpk-dev
+#RUN install2.r --error \
+# blackbox \
+# && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+#RUN mkdir /home/rstudio/software/migraine \
+#  && cd /home/rstudio/software/migraine \
+#  && wget http://kimura.univ-montp2.fr/%7Erousset/migraine05/migraine.tar.gz \
+#  && gunzip migraine.tar.gz; tar xvf migraine.tar \
+#  && rm -rf migraine.tar.gz  migraine.tar \
+#  && g++ -DNO_MODULES -o migraine latin.cpp -O3 
   
 # Install Bayescan
 RUN mkdir /home/rstudio/software/bayescan \
@@ -119,14 +119,14 @@ RUN mkdir /home/rstudio/software/bayescan \
   && make
 
 # Install genepop on linux
-RUN mkdir /home/rstudio/software/genepop \
-  && cd /home/rstudio/software/genepop \
-  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
-  && unzip GenepopV4.zip \
-  && unzip sources.zip \ 
-  && rm -rf GenepopV4.zip sources.zip \
-  && g++ -o Genepop *.cpp -O3 \
-  && cp Genepop /usr/local/bin/Genepop
+#RUN mkdir /home/rstudio/software/genepop \
+#  && cd /home/rstudio/software/genepop \
+#  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
+#  && unzip GenepopV4.zip \
+#  && unzip sources.zip \ 
+#  && rm -rf GenepopV4.zip sources.zip \
+#  && g++ -o Genepop *.cpp -O3 \
+#  && cp Genepop /usr/local/bin/Genepop
 
 # Install console version of Arlequin
 RUN mkdir /home/rstudio/software/arlecore \
@@ -163,7 +163,7 @@ RUN install2.r --error \
   BiocManager \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   # Install R packages from Bioconductor
-RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue'))"
+RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue', 'ggtree'))"
   # Install dartR
 #RUN install2.r --error \
 #  dartR \
