@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM hlapp/rpopgen:v0.2.13
+FROM hlapp/rpopgen
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Tinytex
@@ -74,18 +74,17 @@ RUN cpanm Clone \
         Archive::Extract \
         Array::Utils
 
-# Copy .pm files to /usr/share/perl/5.28/
-	# needs to be changed to 5.30 for more recent versions
+# Copy .pm files to /usr/share/perl/5.30
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK \
-        && sudo chmod +x *pm \
-        && cp *.pm /usr/share/perl/5.28/
+        && chmod +x *pm \
+        && cp *.pm /usr/share/perl/5.30
 # fix permissions for executables
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/CLUMPP \
-        && sudo chmod +x CLUMPP \
+        && chmod +x CLUMPP \
         && cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/mcl/bin \
-        && sudo chmod +x * \
+        && chmod +x * \
         && cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/distruct \
-        && sudo chmod +x distruct1.1
+        && chmod +x distruct1.1
 
 # Install Structure
 RUN mkdir /home/rstudio/software/struct-src \
@@ -138,8 +137,8 @@ RUN mkdir /home/rstudio/software/arlecore \
 
 # Install Pophelper for Structure output
   # install linux dependencies
-RUN sudo apt -y install libcairo2-dev \
-  && sudo apt -y install libxt-dev
+RUN apt -y install libcairo2-dev \
+  && apt -y install libxt-dev
   # install R dependencies
 RUN install2.r --error \
   Cairo \
@@ -155,9 +154,9 @@ RUN installGithub.r \
   
 # Install dartR package
   # install linux dependencies
-RUN sudo apt-get update -qq
-RUN sudo apt -y install libglu1-mesa-dev
-RUN sudo apt-get -y --no-install-recommends \
+RUN apt-get update -qq
+RUN apt -y install libglu1-mesa-dev
+RUN apt-get -y --no-install-recommends \
 	install gdal-bin proj-bin libgdal-dev libproj-dev
   # Install BiocManager
 RUN install2.r --error \
@@ -169,11 +168,12 @@ RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue', 'ggtree'))"
 #RUN install2.r --error \
 #  dartR \
 #  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-RUN installGithub.r \
-  green-striped-gecko/dartR \
- && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-
+#RUN installGithub.r \
+#  green-striped-gecko/dartR \
+# && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+# dartR not installed until a fix for vcfR is available
 # Install R packages from CRAN
+
 RUN apt-get update -qq \
   && apt-get -y install libudunits2-dev # needed for scatterpie
 RUN install2.r --error \
@@ -185,7 +185,7 @@ RUN install2.r --error \
   genepop \
   factoextra \
   kableExtra \
-  scatterpie \
+  #scatterpie \ until fixed for R 4.0.0
   ggmap \
   ggsn \
   diveRsity \
