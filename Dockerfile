@@ -119,14 +119,14 @@ RUN mkdir /home/rstudio/software/bayescan \
   && make
 
 # Install genepop on linux
-#RUN mkdir /home/rstudio/software/genepop \
-#  && cd /home/rstudio/software/genepop \
-#  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
-#  && unzip GenepopV4.zip \
-#  && unzip sources.zip \ 
-#  && rm -rf GenepopV4.zip sources.zip \
-#  && g++ -o Genepop *.cpp -O3 \
-#  && cp Genepop /usr/local/bin/Genepop
+RUN mkdir /home/rstudio/software/genepop \
+  && cd /home/rstudio/software/genepop \
+  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
+  && unzip GenepopV4.zip \
+  && unzip sources.zip \ 
+  && rm -rf GenepopV4.zip sources.zip \
+  && g++ -o Genepop *.cpp -O3 \
+  && cp Genepop /usr/local/bin/Genepop
 
 # Install console version of Arlequin
 RUN mkdir /home/rstudio/software/arlecore \
