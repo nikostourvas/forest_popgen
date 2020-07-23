@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM hlapp/rpopgen:0.2.13
+FROM hlapp/rpopgen:v0.2.13
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Tinytex
