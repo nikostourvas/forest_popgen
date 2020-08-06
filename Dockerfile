@@ -197,6 +197,7 @@ RUN install2.r --error \
   sjstats \
   agricolae \
   ggpubr \ 
+  gridGraphics \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
