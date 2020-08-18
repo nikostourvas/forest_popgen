@@ -1,30 +1,30 @@
 ####### Dockerfile #######
-FROM hlapp/rpopgen
+FROM rocker/verse:4.0.2
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
-# Tinytex
-RUN wget -qO- \
-    "https://github.com/yihui/tinytex/raw/master/tools/install-unx.sh" | \
-    sh -s - --admin --no-path \
-  && mv ~/.TinyTeX /opt/TinyTeX \
-  && /opt/TinyTeX/bin/*/tlmgr path add \
-  && tlmgr install metafont mfware inconsolata tex ae parskip listings \
-  && tlmgr path add \
-  && Rscript -e "source('https://install-github.me/yihui/tinytex'); tinytex::r_texmf()" \
-  && chown -R root:staff /opt/TinyTeX \
-  && chmod -R g+w /opt/TinyTeX \
-  && chmod -R g+wx /opt/TinyTeX/bin
-  
-# Install additional Latex packages
-RUN tlmgr install \
-  greek-fontenc \
-  babel-greek \
-  setspace \
-  hanging
-  
 # Create directory for population genetics software on linux
 RUN mkdir /home/rstudio/software
 
+# Prevent error messages from debconf about non-interactive frontend
+ARG TERM=linux
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Servers for Migraine, Genepop and other software
+# are sometimes unstable, so install first
+
+# Install Migraine
+RUN apt-get update -qq \
+  && apt -y install libgmp3-dev libglpk-dev
+RUN install2.r --error \
+ blackbox \
+ && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+RUN mkdir /home/rstudio/software/migraine \
+  && cd /home/rstudio/software/migraine \
+  && wget http://kimura.univ-montp2.fr/%7Erousset/migraine05/migraine.tar.gz \
+  && gunzip migraine.tar.gz; tar xvf migraine.tar \
+  && rm -rf migraine.tar.gz  migraine.tar \
+  && g++ -DNO_MODULES -o migraine latin.cpp -O3 
+ 
 # Install clumpp
 #RUN mkdir /home/rstudio/software/clumpp \ 
 #  && cd /home/rstudio/software/clumpp \
@@ -96,19 +96,6 @@ RUN mkdir /home/rstudio/software/struct-src \
   && make \
   && cp structure /usr/local/bin/structure 
 
-# Install Migraine
-#RUN apt-get update -qq \
-#  && apt -y install libgmp3-dev libglpk-dev
-#RUN install2.r --error \
-# blackbox \
-# && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-#RUN mkdir /home/rstudio/software/migraine \
-#  && cd /home/rstudio/software/migraine \
-#  && wget http://kimura.univ-montp2.fr/%7Erousset/migraine05/migraine.tar.gz \
-#  && gunzip migraine.tar.gz; tar xvf migraine.tar \
-#  && rm -rf migraine.tar.gz  migraine.tar \
-#  && g++ -DNO_MODULES -o migraine latin.cpp -O3 
-  
 # Install Bayescan
 RUN mkdir /home/rstudio/software/bayescan \
   && cd /home/rstudio/software/bayescan \
@@ -135,6 +122,87 @@ RUN mkdir /home/rstudio/software/arlecore \
   && unzip arlecore_linux.zip \
   && rm -rf arlecore_linux.zip	 
 
+
+
+# The following section is copied from hlapp/rpopgen Dockerfile
+# It is copied instead of using it as a base for this image because it is not 
+# updated regularly
+
+#------------------------------------------------------------------------------
+## Some of the R packages depend on libraries not already installed in the
+## base image, so they need to be installed here for the R package
+## installations to succeed.
+RUN apt-get update \
+    && apt-get install -y \
+    libgsl0-dev \
+    libmagick++-dev \
+    libudunits2-dev \
+    gdal-bin \
+    libgdal-dev
+
+## The nloptr package is needed by lme4, and it itself needs to download the
+## NLopt code from http://ab-initio.mit.edu/wiki/index.php/NLopt, which is
+## unstable. Hence we put this upfront, so that we fail fast on this step,
+## which makes it easier to redo.
+RUN install2.r --error \
+    nloptr \
+&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## Bioconductor dependencies of packages we install from CRAN (specifically pegas)
+RUN install2.r --error BiocManager \
+&& Rscript -e 'requireNamespace("BiocManager"); BiocManager::install();' \
+&& Rscript -e 'requireNamespace("BiocManager");	BiocManager::install(c("Biostrings", "qvalue"));' \
+&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+RUN R -e "BiocManager::install(c('Biostrings', 'qvalue'))"
+
+## Install population genetics packages from CRAN
+RUN rm -rf /tmp/*.rds \
+&&  install2.r --error \
+    apex \
+    ape \
+    adegenet \
+    adespatial \
+    pegas \
+    phangorn \
+    phylobase \
+    coalescentMCMC \
+    mmod \
+    poppr \
+    psych \
+    #strataG \
+    rmetasim \
+    genetics \
+    hierfstat \
+    lme4 \
+    MuMIn \
+    multcomp \
+    raster \
+    vegan \
+    viridis \
+    pcadapt \
+&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## Install population genetics packages from Github
+## (hierfstat included here temporarily until new release is on CRAN)
+RUN installGithub.r \
+    whitlock/OutFLANK \
+&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## Install other useful packages from CRAN
+RUN install2.r --error \
+    knitcitations \
+    phytools \
+&& rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+#------------------------------------------------------------------------------
+
+# Install additional Latex packages
+RUN tlmgr install \
+  greek-fontenc \
+  babel-greek \
+  setspace \
+  hanging
+  
 # Install Pophelper for Structure output
   # install linux dependencies
 RUN apt -y install libcairo2-dev \
@@ -143,10 +211,8 @@ RUN apt -y install libcairo2-dev \
 RUN install2.r --error \
   Cairo \
   devtools \
-  ggplot2 \
   gridExtra \
-  gtable \
-  tidyr 
+  gtable 
   # install pophelper from github
 RUN installGithub.r \
   royfrancis/pophelper \
@@ -158,12 +224,10 @@ RUN apt-get update -qq
 RUN apt -y install libglu1-mesa-dev
 RUN apt-get -y --no-install-recommends \
 	install gdal-bin proj-bin libgdal-dev libproj-dev
-  # Install BiocManager
-RUN install2.r --error \
-  BiocManager \
-  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-  # Install R packages from Bioconductor
+
+# Install R packages from Bioconductor
 RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue', 'ggtree'))"
+
   # Install dartR
 #RUN install2.r --error \
 #  dartR \
@@ -172,8 +236,8 @@ RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue', 'ggtree'))"
 #  green-striped-gecko/dartR \
 # && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 # dartR not installed until a fix for vcfR is available
-# Install R packages from CRAN
 
+# Install R packages from CRAN
 RUN apt-get update -qq \
   && apt-get -y install libudunits2-dev # needed for scatterpie
 RUN install2.r --error \
@@ -185,7 +249,7 @@ RUN install2.r --error \
   genepop \
   factoextra \
   kableExtra \
-  #scatterpie \ until fixed for R 4.0.0
+  scatterpie \
   ggmap \
   ggsn \
   diveRsity \
@@ -207,6 +271,8 @@ RUN installGithub.r \
   thierrygosselin/radiator \
   zkamvar/ggcompoplot \
   nikostourvas/PopGenUtils \
+  ericarcher/strataG \	
+  knausb/vcfR \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
 # Install radiator
@@ -221,8 +287,3 @@ RUN apt -y install python3-venv python3-pip \
 # optional: add structure-threader to PATH
 #RUN echo "PATH=$PATH:/.local/bin" >> .profile
 
-# Import Data or Create a blank Data directory
-# COPY /data /home/rstudio/data
-RUN mkdir /home/rstudio/data
-
-# TODO: Make data read-only
