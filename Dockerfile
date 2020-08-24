@@ -262,6 +262,8 @@ RUN install2.r --error \
   agricolae \
   ggpubr \ 
   gridGraphics \
+  officer \
+  flextable \	
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
