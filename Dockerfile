@@ -225,6 +225,10 @@ RUN apt -y install libglu1-mesa-dev
 RUN apt-get -y --no-install-recommends \
 	install gdal-bin proj-bin libgdal-dev libproj-dev
 
+# Install SOLOMON r package
+RUN apt -y install tcl tk
+RUN install2.r --error SOLOMON
+
 # Install R packages from Bioconductor
 RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue', 'ggtree'))"
 
@@ -264,6 +268,7 @@ RUN install2.r --error \
   gridGraphics \
   officer \
   flextable \	
+  PopGenReport \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
