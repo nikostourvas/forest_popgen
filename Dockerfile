@@ -232,15 +232,6 @@ RUN install2.r --error SOLOMON
 # Install R packages from Bioconductor
 RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue', 'ggtree'))"
 
-  # Install dartR
-#RUN install2.r --error \
-#  dartR \
-#  && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-#RUN installGithub.r \
-#  green-striped-gecko/dartR \
-# && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-# dartR not installed until a fix for vcfR is available
-
 # Install R packages from CRAN
 RUN apt-get update -qq \
   && apt-get -y install libudunits2-dev # needed for scatterpie
@@ -269,6 +260,8 @@ RUN install2.r --error \
   officer \
   flextable \	
   PopGenReport \
+  vcfR \
+  dartR \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
@@ -279,7 +272,6 @@ RUN installGithub.r \
   zkamvar/ggcompoplot \
   nikostourvas/PopGenUtils \
   ericarcher/strataG \	
-  knausb/vcfR \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
 # Install radiator
