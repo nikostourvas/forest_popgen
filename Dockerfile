@@ -196,13 +196,6 @@ RUN install2.r --error \
 && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 #------------------------------------------------------------------------------
 
-# Install additional Latex packages
-RUN tlmgr install \
-  greek-fontenc \
-  babel-greek \
-  setspace \
-  hanging
-  
 # Install Pophelper for Structure output
   # install linux dependencies
 RUN apt -y install libcairo2-dev \
