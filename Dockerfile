@@ -262,6 +262,7 @@ RUN install2.r --error \
   PopGenReport \
   vcfR \
   dartR \
+  eulerr \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
