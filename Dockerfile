@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/verse:4.0.2
+FROM rocker/verse:4.0.3
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
