@@ -266,6 +266,7 @@ RUN installGithub.r \
   zkamvar/ggcompoplot \
   nikostourvas/PopGenUtils \
   ericarcher/strataG \	
+  zakrobinson/RLDNe \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
 # Install radiator
