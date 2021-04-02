@@ -78,7 +78,7 @@ RUN cpanm Clone \
 # Copy .pm files to /usr/share/perl/5.30
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK \
         && chmod +x *pm \
-        && cp * /usr/share/perl/5.30
+        && cp *.pm /usr/share/perl/5.30
 # fix permissions for executables
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/CLUMPP \
         && chmod +x CLUMPP \
