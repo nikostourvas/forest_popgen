@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/verse:4.0.2
+FROM rocker/verse:4.0.4
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -172,7 +172,7 @@ RUN rm -rf /tmp/*.rds \
     poppr \
     psych \
     #strataG \
-    rmetasim \
+    #rmetasim \
     genetics \
     hierfstat \
     lme4 \
@@ -231,10 +231,10 @@ RUN apt-get update -qq \
   && apt-get -y install libudunits2-dev # needed for scatterpie
 RUN install2.r --error \
   bookdown \
-  citr \
+  #citr \
   ggThemeAssist \
   remedy \
-  popprxl \
+  #popprxl \
   genepop \
   factoextra \
   kableExtra \
@@ -267,7 +267,7 @@ RUN installGithub.r \
   zkamvar/ggcompoplot \
   nikostourvas/PopGenUtils \
   ericarcher/strataG \	
-  zakrobinson/RLDNe \
+  #zakrobinson/RLDNe \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
 # Install radiator
