@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/verse:4.0.4
+FROM rocker/verse:4.0.5
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -123,8 +123,6 @@ RUN mkdir /home/rstudio/software/arlecore \
   && unzip arlecore_linux.zip \
   && rm -rf arlecore_linux.zip	 
 
-
-
 # The following section is copied from hlapp/rpopgen Dockerfile
 # It is copied instead of using it as a base for this image because it is not 
 # updated regularly
@@ -201,9 +199,13 @@ RUN install2.r --error \
   # install linux dependencies
 RUN apt -y install libcairo2-dev \
   && apt -y install libxt-dev
+RUN apt install -y libfreetype6-dev \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libxml2-dev \
+        libnlopt-dev
   # install R dependencies
 RUN install2.r --error \
-  Cairo \
   devtools \
   gridExtra \
   gtable 
