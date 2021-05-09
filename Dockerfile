@@ -123,6 +123,14 @@ RUN mkdir /home/rstudio/software/arlecore \
   && unzip arlecore_linux.zip \
   && rm -rf arlecore_linux.zip	 
 
+# Install newhybrids without gui
+RUN cd /home/rstudio/software/ \
+&& git clone https://github.com/eriqande/newhybrids.git \
+&& cd newhybrids \
+&& git submodule init \
+&& git submodule update \
+&& ./Compile-with-no-gui-Linux.sh
+
 # The following section is copied from hlapp/rpopgen Dockerfile
 # It is copied instead of using it as a base for this image because it is not 
 # updated regularly
@@ -269,12 +277,9 @@ RUN installGithub.r \
   zkamvar/ggcompoplot \
   nikostourvas/PopGenUtils \
   ericarcher/strataG \	
-  #zakrobinson/RLDNe \
+  bwringe/parallelnewhybrid \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
-# Install radiator
-#RUN R -e "pak::pkg_install("thierrygosselin/radiator", ask = FALSE)"
-
 # Install vim
 RUN apt -y install vim
 	
