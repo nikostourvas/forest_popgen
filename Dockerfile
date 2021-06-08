@@ -278,6 +278,7 @@ RUN installGithub.r \
   nikostourvas/PopGenUtils \
   ericarcher/strataG \	
   bwringe/parallelnewhybrid \
+  konopinski/Shannon \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
   
 # Install vim
