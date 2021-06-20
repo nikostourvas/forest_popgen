@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/verse:4.0.5
+FROM rocker/verse:4.1.0
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -9,6 +9,9 @@ RUN mkdir /home/rstudio/software
 ARG TERM=linux
 ARG DEBIAN_FRONTEND=noninteractive
 
+# Install vim
+RUN apt -y install vim
+	
 # Servers for Migraine, Genepop and other software
 # are sometimes unstable, so install first
 
@@ -130,6 +133,12 @@ RUN cd /home/rstudio/software/ \
 && git submodule init \
 && git submodule update \
 && ./Compile-with-no-gui-Linux.sh
+
+# Install python3-pip & structure_threader
+RUN apt update && apt -y install python3-venv python3-pip \
+&& pip3 install structure_threader 
+# optional: add structure-threader to PATH
+#RUN echo "PATH=$PATH:/.local/bin" >> .profile
 
 # The following section is copied from hlapp/rpopgen Dockerfile
 # It is copied instead of using it as a base for this image because it is not 
@@ -280,13 +289,3 @@ RUN installGithub.r \
   bwringe/parallelnewhybrid \
   konopinski/Shannon \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-  
-# Install vim
-RUN apt -y install vim
-	
-# Install python3-pip & structure_threader
-RUN apt -y install python3-venv python3-pip \
-&& pip3 install structure_threader 
-# optional: add structure-threader to PATH
-#RUN echo "PATH=$PATH:/.local/bin" >> .profile
-
