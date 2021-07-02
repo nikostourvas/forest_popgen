@@ -276,6 +276,7 @@ RUN install2.r --error \
   vcfR \
   dartR \
   eulerr \
+  assignPOP \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
