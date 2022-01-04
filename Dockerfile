@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/verse:4.1.0
+FROM rocker/verse:4.1.2
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -16,17 +16,17 @@ RUN apt -y install vim
 # are sometimes unstable, so install first
 
 # Install Migraine
-RUN apt-get update -qq \
-  && apt -y install libgmp3-dev libglpk-dev
-RUN install2.r --error \
- blackbox \
- && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
-RUN mkdir /home/rstudio/software/migraine \
-  && cd /home/rstudio/software/migraine \
-  && wget http://kimura.univ-montp2.fr/%7Erousset/migraine05/migraine.tar.gz \
-  && gunzip migraine.tar.gz; tar xvf migraine.tar \
-  && rm -rf migraine.tar.gz  migraine.tar \
-  && g++ -DNO_MODULES -o migraine latin.cpp -O3 
+#RUN apt-get update -qq \
+#  && apt -y install libgmp3-dev libglpk-dev
+#RUN install2.r --error \
+# blackbox \
+# && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+#RUN mkdir /home/rstudio/software/migraine \
+#  && cd /home/rstudio/software/migraine \
+#  && wget http://kimura.univ-montp2.fr/%7Erousset/migraine05/migraine.tar.gz \
+#  && gunzip migraine.tar.gz; tar xvf migraine.tar \
+#  && rm -rf migraine.tar.gz  migraine.tar \
+#  && g++ -DNO_MODULES -o migraine latin.cpp -O3 
  
 # Install clumpp
 #RUN mkdir /home/rstudio/software/clumpp \ 
@@ -48,7 +48,7 @@ RUN mkdir /home/rstudio/software/clumpak \
         && rm -rf CLUMPAK.zip 26_03_2015_CLUMPAK.zip Mac_OSX_files.zip
 
 # Install clumpak perl dependencies via apt
-RUN apt -y install libgd-graph3d-perl \
+RUN apt update && apt -y install libgd-graph3d-perl \
         libgd-graph-perl \
         libgd-perl \
         libarchive-zip-perl \
@@ -128,17 +128,26 @@ RUN mkdir /home/rstudio/software/arlecore \
 
 # Install newhybrids without gui
 RUN cd /home/rstudio/software/ \
-&& git clone https://github.com/eriqande/newhybrids.git \
-&& cd newhybrids \
-&& git submodule init \
-&& git submodule update \
-&& ./Compile-with-no-gui-Linux.sh
+  && git clone https://github.com/eriqande/newhybrids.git \
+  && cd newhybrids \
+  && git submodule init \
+  && git submodule update \
+  && ./Compile-with-no-gui-Linux.sh
 
 # Install python3-pip & structure_threader
 RUN apt update && apt -y install python3-venv python3-pip \
 && pip3 install structure_threader 
 # optional: add structure-threader to PATH
 #RUN echo "PATH=$PATH:/.local/bin" >> .profile
+
+# Install TreeMix
+RUN apt update && apt -y install libboost-all-dev libgsl0-dev
+RUN cd /home/rstudio/software/ \
+  && git clone https://bitbucket.org/nygcresearch/treemix.git \
+  && cd treemix \
+  && ./configure \
+  && make \
+  && make install
 
 # The following section is copied from hlapp/rpopgen Dockerfile
 # It is copied instead of using it as a base for this image because it is not 
@@ -277,6 +286,8 @@ RUN install2.r --error \
   dartR \
   eulerr \
   assignPOP \
+  OptM \
+  gghalves \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Install R packages from github
