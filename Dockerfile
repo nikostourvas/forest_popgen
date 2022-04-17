@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/verse:4.1.2
+FROM rocker/verse:4.1.3
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -296,8 +296,8 @@ RUN installGithub.r \
   fawda123/ggord \
   thierrygosselin/radiator \
   zkamvar/ggcompoplot \
-  nikostourvas/PopGenUtils \
   ericarcher/strataG \	
   bwringe/parallelnewhybrid \
   konopinski/Shannon \
+  nikostourvas/PopGenUtils \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
