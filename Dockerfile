@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/verse:4.1.3
+FROM rocker/verse:4.2.1
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -127,12 +127,12 @@ RUN mkdir /home/rstudio/software/arlecore \
   && rm -rf arlecore_linux.zip	 
 
 # Install newhybrids without gui
-RUN cd /home/rstudio/software/ \
-  && git clone https://github.com/eriqande/newhybrids.git \
-  && cd newhybrids \
-  && git submodule init \
-  && git submodule update \
-  && ./Compile-with-no-gui-Linux.sh
+#RUN cd /home/rstudio/software/ \
+  #&& git clone https://github.com/eriqande/newhybrids.git \
+  #&& cd newhybrids \
+  #&& git submodule init \
+  #&& git submodule update \
+  #&& ./Compile-with-no-gui-Linux.sh
 
 # Install python3-pip & structure_threader
 RUN apt update && apt -y install python3-venv python3-pip \
@@ -248,8 +248,8 @@ RUN apt-get -y --no-install-recommends \
 	install gdal-bin proj-bin libgdal-dev libproj-dev
 
 # Install SOLOMON r package
-RUN apt -y install tcl tk
-RUN install2.r --error SOLOMON
+#RUN apt -y install tcl tk
+#RUN install2.r --error SOLOMON
 
 # Install R packages from Bioconductor
 RUN R -e "BiocManager::install(c('SNPRelate', 'qvalue', 'ggtree'))"
