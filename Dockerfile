@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/verse:4.2.1
+FROM rocker/tidyverse:4.2.2
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -10,7 +10,7 @@ ARG TERM=linux
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install vim
-RUN apt -y install vim
+RUN apt update && apt -y install vim
 	
 # Servers for Migraine, Genepop and other software
 # are sometimes unstable, so install first
@@ -81,24 +81,33 @@ RUN cpanm Clone \
 # Copy .pm files to /usr/share/perl/5.30
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK \
         && chmod +x *pm \
-        && cp *.pm /usr/share/perl/5.30
-# fix permissions for executables
+        && cp *.pm /usr/share/perl/5.34
+# fix permissions for executables & add to path
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/CLUMPP \
         && chmod +x CLUMPP \
         && cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/mcl/bin \
         && chmod +x * \
         && cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/distruct \
         && chmod +x distruct1.1
+ENV PATH="$PATH:/home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/CLUMPP"
+ENV PATH="$PATH:/home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/mcl/bin"
+ENV PATH="$PATH:/home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/distruct"
 
 # Install Structure
-RUN mkdir /home/rstudio/software/struct-src \
-  && cd /home/rstudio/software/struct-src \
-  && wget https://web.stanford.edu/group/pritchardlab/structure_software/release_versions/v2.3.4/structure_kernel_source.tar.gz \
-  && gunzip structure_kernel_source.tar.gz; tar xvf structure_kernel_source.tar \
-  && rm -rf structure_kernel_source.tar.gz structure_kernel_source.tar\
-  && cd structure_kernel_src \
-  && make \
-  && cp structure /usr/local/bin/structure 
+#RUN mkdir /home/rstudio/software/struct-src \
+  #&& cd /home/rstudio/software/struct-src \
+  #&& wget https://web.stanford.edu/group/pritchardlab/structure_software/release_versions/v2.3.4/structure_kernel_source.tar.gz \
+  #&& gunzip structure_kernel_source.tar.gz; tar xvf structure_kernel_source.tar \
+  #&& rm -rf structure_kernel_source.tar.gz structure_kernel_source.tar\
+  #&& cd structure_kernel_src \
+  #&& make \
+  #&& cp structure /usr/local/bin/structure 
+RUN mkdir /home/rstudio/software/structure \
+  && cd /home/rstudio/software/structure \ 
+  && wget https://web.stanford.edu/group/pritchardlab/structure_software/release_versions/v2.3.4/release/structure_linux_console.tar.gz \
+  && tar xzfv structure_linux_console.tar.gz \
+  && rm -rf structure_linux_console.tar.gz
+ENV PATH="$PATH:/home/rstudio/software/structure/console"
 
 # Install Bayescan
 RUN mkdir /home/rstudio/software/bayescan \
@@ -106,25 +115,28 @@ RUN mkdir /home/rstudio/software/bayescan \
   && wget http://cmpg.unibe.ch/software/BayeScan/files/BayeScan2.1.zip \
   && unzip BayeScan2.1.zip \
   && rm -rf BayeScan2.1.zip \
-  && cd /home/rstudio/software/bayescan/BayeScan2.1/source \
-  && make
+  && cp /home/rstudio/software/bayescan/BayeScan2.1/binaries/BayeScan2.1_linux64bits /usr/local/bin/bayescan
+  #&& cd /home/rstudio/software/bayescan/BayeScan2.1/source \
+  #&& make
 
 # Install genepop on linux
-RUN mkdir /home/rstudio/software/genepop \
-  && cd /home/rstudio/software/genepop \
-  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
-  && unzip GenepopV4.zip \
-  && unzip sources.zip \ 
-  && rm -rf GenepopV4.zip sources.zip \
-  && g++ -o Genepop *.cpp -O3 \
-  && cp Genepop /usr/local/bin/Genepop
+#RUN mkdir /home/rstudio/software/genepop \
+#  && cd /home/rstudio/software/genepop \
+#  && wget http://kimura.univ-montp2.fr/%7Erousset/GenepopV4.zip \
+#  && unzip GenepopV4.zip \
+#  && unzip sources.zip \ 
+#  && rm -rf GenepopV4.zip sources.zip \
+#  && g++ -o Genepop *.cpp -O3 \
+#  && cp Genepop /usr/local/bin/Genepop
 
 # Install console version of Arlequin
 RUN mkdir /home/rstudio/software/arlecore \
   && cd /home/rstudio/software/arlecore \
   && wget http://cmpg.unibe.ch/software/arlequin35/linux/arlecore_linux.zip\
   && unzip arlecore_linux.zip \
-  && rm -rf arlecore_linux.zip	 
+  && rm -rf arlecore_linux.zip \ 
+  && chmod +x arlecore_linux/arlecore3522_64bit
+ENV PATH="$PATH:/home/rstudio/software/arlecore/arlecore_linux"
 
 # Install newhybrids without gui
 #RUN cd /home/rstudio/software/ \
@@ -157,8 +169,8 @@ RUN cd /home/rstudio/software/ \
 ## Some of the R packages depend on libraries not already installed in the
 ## base image, so they need to be installed here for the R package
 ## installations to succeed.
-RUN apt-get update \
-    && apt-get install -y \
+RUN apt update \
+    && apt install -y \
     libgsl0-dev \
     libmagick++-dev \
     libudunits2-dev \
@@ -187,7 +199,7 @@ RUN rm -rf /tmp/*.rds \
     apex \
     ape \
     adegenet \
-    adespatial \
+    #adespatial \
     pegas \
     phangorn \
     phylobase \
@@ -283,19 +295,23 @@ RUN install2.r --error \
   flextable \	
   PopGenReport \
   vcfR \
-  dartR \
+  #dartR \
   eulerr \
   assignPOP \
   OptM \
   gghalves \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
+# Dependencies for strataG, PopGenUtils
+RUN apt update -qq \
+	&& apt -y install libglpk-dev
+
 # Install R packages from github
 RUN installGithub.r \
   jgx65/hierfstat \
   fawda123/ggord \
   thierrygosselin/radiator \
-  zkamvar/ggcompoplot \
+  #zkamvar/ggcompoplot \
   ericarcher/strataG \	
   bwringe/parallelnewhybrid \
   konopinski/Shannon \
