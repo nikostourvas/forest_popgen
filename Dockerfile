@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/tidyverse:4.2.2
+FROM rocker/tidyverse:4.3.2
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -40,7 +40,7 @@ RUN apt update && apt -y install vim
 # Install clumpak
 RUN mkdir /home/rstudio/software/clumpak \
         && cd /home/rstudio/software/clumpak \
-        && wget http://clumpak.tau.ac.il/download/CLUMPAK.zip \
+	&& wget https://tau.evolseq.net/clumpak/download/CLUMPAK.zip \
         && cd /home/rstudio/software/clumpak \
         && unzip CLUMPAK.zip \
         && cd CLUMPAK \
@@ -196,7 +196,7 @@ RUN R -e "BiocManager::install(c('Biostrings', 'qvalue'))"
 ## Install population genetics packages from CRAN
 RUN rm -rf /tmp/*.rds \
 &&  install2.r --error \
-    apex \
+    #apex \
     ape \
     adegenet \
     #adespatial \
@@ -280,8 +280,8 @@ RUN install2.r --error \
   kableExtra \
   scatterpie \
   ggmap \
-  ggsn \
-  diveRsity \
+  #ggsn \
+  #diveRsity \
   ecodist \
   splitstackshape \
   fsthet \
