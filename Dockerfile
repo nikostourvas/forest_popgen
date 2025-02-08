@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/tidyverse:4.3.2
+FROM rocker/tidyverse:4.4.2
 MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
 
 # Create directory for population genetics software on linux
@@ -78,10 +78,10 @@ RUN cpanm Clone \
 	Archive::Zip \
         Array::Utils
 
-# Copy .pm files to /usr/share/perl/5.30
+# Copy .pm files to /usr/share/perl/5.38
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK \
         && chmod +x *pm \
-        && cp *.pm /usr/share/perl/5.34
+        && cp *.pm /usr/share/perl/5.38
 # fix permissions for executables & add to path
 RUN cd /home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPAK/CLUMPP \
         && chmod +x CLUMPP \
@@ -146,11 +146,10 @@ ENV PATH="$PATH:/home/rstudio/software/arlecore/arlecore_linux"
   #&& git submodule update \
   #&& ./Compile-with-no-gui-Linux.sh
 
-# Install python3-pip & structure_threader
-RUN apt update && apt -y install python3-venv python3-pip \
-&& pip3 install structure_threader 
-# optional: add structure-threader to PATH
-#RUN echo "PATH=$PATH:/.local/bin" >> .profile
+# Install pipx & structure_threader
+RUN apt update && apt -y install pipx \
+&& pipx ensurepath \
+&& pipx install structure_threader
 
 # Install TreeMix
 RUN apt update && apt -y install libboost-all-dev libgsl0-dev
