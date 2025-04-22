@@ -19,6 +19,11 @@ docker run --name popgen --rm -dp 8787:8787 -e ROOT=TRUE -e DISABLE_AUTH=true -v
 localhost:8787
 ```
 
+You can access your files from the path:
+```
+/home/rstudio/working/
+```
+
 Optionally, when your are done with data analysis you can shut down the RStudio server by typing in a terminal:
 ```
 docker stop popgen
