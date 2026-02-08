@@ -1,6 +1,6 @@
 ####### Dockerfile #######
-FROM rocker/tidyverse:4.4.2
-MAINTAINER Nikolaos Tourvas <nikostourvas@gmail.com>
+FROM rocker/tidyverse:4.5.2
+LABEL maintainer="Nikolaos Tourvas <nikostourvas@gmail.com>"
 
 # Create directory for population genetics software on linux
 RUN mkdir /home/rstudio/software
@@ -40,7 +40,7 @@ RUN apt update && apt -y install vim
 # Install clumpak
 RUN mkdir /home/rstudio/software/clumpak \
         && cd /home/rstudio/software/clumpak \
-	&& wget https://tau.evolseq.net/clumpak/download/CLUMPAK.zip \
+	&& wget https://clumpak.evolseq.net/download/CLUMPAK.zip \
         && cd /home/rstudio/software/clumpak \
         && unzip CLUMPAK.zip \
         && cd CLUMPAK \
@@ -298,7 +298,7 @@ RUN install2.r --error \
   eulerr \
   assignPOP \
   OptM \
-  gghalves \
+  #gghalves \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Dependencies for strataG, PopGenUtils
