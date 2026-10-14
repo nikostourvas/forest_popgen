@@ -308,7 +308,6 @@ RUN install2.r --error \
   eulerr \
   assignPOP \
   OptM \
-  #gghalves \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 # Dependencies for strataG, PopGenUtils
@@ -316,6 +315,8 @@ RUN apt update -qq \
 	&& apt -y install libglpk-dev
 
 # Install R packages from github
+# gghalves: archived on CRAN (2025-12-04) and broken with ggplot2 >= 4.0;
+# pinned to the ggplot2 4.0 compatibility fix (erocoar/gghalves PR #28).
 RUN installGithub.r \
   jgx65/hierfstat \
   fawda123/ggord \
@@ -325,4 +326,5 @@ RUN installGithub.r \
   bwringe/parallelnewhybrid \
   konopinski/Shannon \
   nikostourvas/PopGenUtils \
+  teunbrand/gghalves@58ed08bd43226f518e958bf82f8fdb1967b10702 \
   && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
