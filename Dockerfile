@@ -1,5 +1,5 @@
 ####### Dockerfile #######
-FROM rocker/tidyverse:4.5.2
+FROM rocker/tidyverse:4.6.1
 LABEL maintainer="Nikolaos Tourvas <nikostourvas@gmail.com>"
 
 # Create directory for population genetics software on linux
@@ -102,6 +102,8 @@ ENV PATH="$PATH:/home/rstudio/software/clumpak/CLUMPAK/26_03_2015_CLUMPAK/CLUMPA
   #&& cd structure_kernel_src \
   #&& make \
   #&& cp structure /usr/local/bin/structure 
+# The console binary is 32-bit, so it needs the i386 C library
+RUN apt update && apt -y install libc6-i386
 RUN mkdir /home/rstudio/software/structure \
   && cd /home/rstudio/software/structure \ 
   && wget https://web.stanford.edu/group/pritchardlab/structure_software/release_versions/v2.3.4/release/structure_linux_console.tar.gz \
@@ -115,7 +117,8 @@ RUN mkdir /home/rstudio/software/bayescan \
   && wget http://cmpg.unibe.ch/software/BayeScan/files/BayeScan2.1.zip \
   && unzip BayeScan2.1.zip \
   && rm -rf BayeScan2.1.zip \
-  && cp /home/rstudio/software/bayescan/BayeScan2.1/binaries/BayeScan2.1_linux64bits /usr/local/bin/bayescan
+  && cp /home/rstudio/software/bayescan/BayeScan2.1/binaries/BayeScan2.1_linux64bits /usr/local/bin/bayescan \
+  && chmod +x /usr/local/bin/bayescan
   #&& cd /home/rstudio/software/bayescan/BayeScan2.1/source \
   #&& make
 
@@ -147,9 +150,14 @@ ENV PATH="$PATH:/home/rstudio/software/arlecore/arlecore_linux"
   #&& ./Compile-with-no-gui-Linux.sh
 
 # Install pipx & structure_threader
+# Install outside /root so the rstudio user can run it. The bin dir is appended
+# to PATH so the Stanford structure binary above still takes precedence over
+# the copy bundled with structure_threader.
+ENV PIPX_HOME=/opt/pipx
+ENV PIPX_BIN_DIR=/opt/pipx/bin
 RUN apt update && apt -y install pipx \
-&& pipx ensurepath \
 && pipx install structure_threader
+ENV PATH="$PATH:/opt/pipx/bin"
 
 # Install TreeMix
 RUN apt update && apt -y install libboost-all-dev libgsl0-dev
@@ -221,6 +229,8 @@ RUN rm -rf /tmp/*.rds \
 
 ## Install population genetics packages from Github
 ## (hierfstat included here temporarily until new release is on CRAN)
+# installGithub.r needs remotes, which rocker images no longer ship (R >= 4.6)
+RUN install2.r --error remotes
 RUN installGithub.r \
     whitlock/OutFLANK \
 && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
